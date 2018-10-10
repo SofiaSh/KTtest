@@ -1,48 +1,14 @@
-from django.contrib.auth.models import AbstractUser, BaseUserManager
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-
-
-class UserManager(BaseUserManager):
-    """Define a model manager for User model with no username field."""
-
-    use_in_migrations = True
-
-    def _create_user(self, email, password, **extra_fields):
-        """Create and save a User with the given email and password."""
-        if not email:
-            raise ValueError('The given email must be set')
-        email = self.normalize_email(email)
-        user = self.model(email=email, **extra_fields)
-        user.set_password(password)
-        user.save(using=self._db)
-        return user
-
-    def create_user(self, email, password=None, **extra_fields):
-        """Create and save a regular User with the given email and password."""
-        extra_fields.setdefault('is_staff', False)
-        extra_fields.setdefault('is_superuser', False)
-        return self._create_user(email, password, **extra_fields)
-
-    def create_superuser(self, email, password, **extra_fields):
-        """Create and save a SuperUser with the given email and password."""
-        extra_fields.setdefault('is_staff', True)
-        extra_fields.setdefault('is_superuser', True)
-
-        if extra_fields.get('is_staff') is not True:
-            raise ValueError('Superuser must have is_staff=True.')
-        if extra_fields.get('is_superuser') is not True:
-            raise ValueError('Superuser must have is_superuser=True.')
-
-        return self._create_user(email, password, **extra_fields)
+from .user_manager import UserManager
 
 
 class User(AbstractUser):
-    """User model."""
 
     username = None
     email = models.EmailField(_('email address'), unique=True)
-    avatar = models.ImageField(upload_to='images/users', verbose_name='аватар')
+    avatar = models.ImageField(upload_to='images/', blank=True, verbose_name='аватар')
     patronymic = models.CharField(verbose_name='отчество', max_length=40, default=' ')
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
@@ -50,6 +16,14 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.email
+
+    def get_user(self, user_id):
+        try:
+            return User.objects.get(pk=user_id)
+        except User.DoesNotExist:
+            return None
+
+    
 
     class Meta:
         db_table = 'User'

@@ -1,0 +1,22 @@
+{% block content %}
+{% if user.is_authenticated %}
+     <div>
+
+        <h1>Анкета</h1>
+         <p>Email: {{user.email}}</p>
+         <p>Фамилия: {{user.last_name}}</p>
+         <p>Имя: {{user.first_name}}</p>
+         <p>Отчество: {{user.patronymic}}</p>
+         {% if user.avatar %}
+             <img src="{{MEDIA_URL}}{{ user.avatar.url }}" width="150" height="150" alt="photo"></p>
+         {% endif %}
+         <br>
+         <a href=/edit/>Изменить</a>
+         <br>
+         <a href=/logout/>Выйти</a>
+
+     </div>
+{% else %}
+     <a href="/">Вам нужно сначала войти</a>
+{% endif %}
+{% endblock %}

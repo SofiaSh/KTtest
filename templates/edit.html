@@ -1,0 +1,23 @@
+{% block content %}
+{% if user.is_authenticated %}
+     <div>
+
+        <h1>Изменить анкету</h1>
+
+         <form method="post" enctype="multipart/form-data">
+             {% csrf_token %}
+             <table>
+
+                {{ form.as_table }}
+                 <tr>
+                    <td></td>
+                    <td><input type="submit" name="submit" value="Сохранить" /></td>
+                </tr>
+             </table>
+         </form>
+     </div>
+    <a href=/logout/>Выйти</a>
+{% else %}
+     <a href="/">Вам нужно сначала войти</a>
+{% endif %}
+{% endblock %}

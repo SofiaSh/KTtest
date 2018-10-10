@@ -1,5 +1,5 @@
 {% block content %}
-
+{%  if not user.is_authenticated %}
      <div class="login">
 
          {% if messages %}
@@ -23,5 +23,8 @@
              </table>
          </form>
      </div>
-
+    <a href=/login/>Войти</a>
+{% else %}
+     <a href="/form/">Вы уже вошли</a>
+{% endif %}
 {% endblock %}
